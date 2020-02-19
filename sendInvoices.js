@@ -5,10 +5,9 @@ const job = require('./job');
 console.log('Loading function');
 const diffDate = moment().subtract(30,'days').format('YYYY-MM-DD')
 const currYear = moment().format('YYYY')
-
 const q = `SELECT Id, Startdatum_Contract__c, FirstName, LastName, Email, Phone, MailingAddress, language_lead__c, External_Id__c, Account.Name FROM Contact WHERE (Status__c = 'Geboekt' AND Email!= null AND Startdatum_Contract__c < ${diffDate} AND AccountId='0010Y00000ryjbxQAA' AND Type__c != 'Sollicitant' AND Type__c != 'Strijkklant') AND (Invoice_sent__c = false OR Invoice_year__c < ${currYear})`
 
-const q2 = 'SELECT Id, Name, Last_invoice_number__c from Invoice__c'
+const queryLastInvoice = 'SELECT Id, Name, Last_invoice_number__c from Invoice__c'
 
 const clearQuery = `SELECT Id FROM Contact WHERE Invoice_sent__c = true`
 
@@ -18,7 +17,7 @@ module.exports.handler = (event, context, callback) => {
   const startJob = async () => {
     await job.login()
     const records = await job.query(q)
-    const [invoicesQuery] = await job.query(q2)
+    const [invoicesQuery] = await job.query(queryLastInvoice)
     lastInvoiceNumber = invoicesQuery.Last_invoice_number__c
     if (records.length) {
       send({ records: records.length })

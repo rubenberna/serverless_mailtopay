@@ -52,7 +52,7 @@ const startInvoice = async record => {
       'address_country2': '',
       'id_request_client': '',
       'company_name': 'EasyLife',
-      'birth_date': moment().format('YYYY-MM-DD'),
+      'birth_date': '',
       'gender': 1,
       'variable1': '',
       'variable2': '',
