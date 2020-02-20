@@ -31,6 +31,7 @@ const startInvoice = async record => {
 
   let date = new Date()
   let atomicDate = date.toISOString()
+  let today = moment().format('YYYY-MM-DD')
 
   let invoiceObj = {
     'request': {
@@ -52,7 +53,7 @@ const startInvoice = async record => {
       'address_country2': '',
       'id_request_client': '',
       'company_name': 'EasyLife',
-      'birth_date': '',
+      'birth_date': today,
       'gender': 1,
       'variable1': '',
       'variable2': '',
@@ -66,15 +67,15 @@ const startInvoice = async record => {
       'module_creditcard': 0,
       'language': record.language_lead__c || 'nl',
       'debtornumber': record.External_Id__c,
-      'payment_reference': `${record.External_Id__c}${+new Date()}`,
+      'payment_reference': record.OGM,
       'concerning': 'admin fee',
       'id_batch': +new Date(),
-      'flow_id': 4547,
+      'flow_id': 4546,
       'flow_step': 1,
       'invoices': {
         'invoice': {
           'invoice_number': record.invoice_nr,
-          'invoice_date': moment().format('YYYY-MM-DD'),
+          'invoice_date': today,
           'invoice_description': 'Email invoice',
           'invoice_amount': 35,
           'invoice_date_due': record.dueDate
@@ -83,7 +84,7 @@ const startInvoice = async record => {
     }
   };
 
-  var xmlObj = builder.create(invoiceObj, { encoding: 'utf-8' })
+  let xmlObj = builder.create(invoiceObj, { encoding: 'utf-8' })
   const invoice = await sendOrder(xmlObj.end({ pretty: true }))
   return invoice
 }
