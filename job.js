@@ -39,7 +39,7 @@ const startInvoice = async record => {
       'lastname': record.LastName,
       'emailaddress1': record.Email,
       'emailaddress2': '',
-      'telephone1': record.Phone,
+      'telephone1': record.Phone ? record.Phone : record.MobilePhone,
       'telephone2': '',
       'address_street': record.MailingAddress.street,
       'address_number': '',
@@ -77,7 +77,7 @@ const startInvoice = async record => {
           'invoice_number': record.invoice_nr,
           'invoice_date': today,
           'invoice_description': 'Email invoice',
-          'invoice_amount': 35,
+          'invoice_amount': 3500,
           'invoice_date_due': record.dueDate
         }
       }
@@ -90,8 +90,12 @@ const startInvoice = async record => {
 }
 
 const sendOrder = async xmlInvoice => {
-  const res = await mailtopayApi.post('collectionorders/', xmlInvoice )
-  return res.data
+  try {
+    const res = await mailtopayApi.post('collectionorders/', xmlInvoice )
+    return
+  } catch (e) {
+    console.log(e.data);
+  }
 }
 
 
